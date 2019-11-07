@@ -1,9 +1,9 @@
 function buildMetadata(sample) {
 
   // @TODO: Complete the following function that builds the metadata panel
-
-  // Use `d3.json` to fetch the metadata for a sample
-    var metadataURL = `/metadata/${sample}`;
+    
+    d3.json(`/metadata/${sample}`).then((data) => {
+    
     // Use d3 to select the panel with id of `#sample-metadata`
     var sampleData = d3.select("#sample-metadata");
     // Use `.html("") to clear any existing metadata
@@ -11,30 +11,35 @@ function buildMetadata(sample) {
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
-    d3.json(metadataURL).then(function (data) {
+    
       Object.entries(data).forEach(([key, value]) => {
         sampleData.append("h5").text(`${key}: ${value}`);
       });
 
     // BONUS: Build the Gauge Chart
     // buildGauge(data.WFREQ);
-}
+    });
+  }
 
 function buildCharts(sample) {
+  d3.json(`/samples/${sample}`).then((data) => {
+    const otu_ids = data.otu_ids;
+    const otu_labels = data.otu_labels;
+    const sample_values = data.sample_values;
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
   var plotDataURL = `/samples/${sample}`;
   
     // @TODO: Build a Bubble Chart using the sample data
-    d3.json(plotDataURL).then((data) => {
+    
       var bubblePlotInfo = {
-        x: data.otu_ids,
-        y: data.sample_values,
+        x: otu_ids,
+        y: sample_values,
         mode: 'markers',
-        text: data.otu_labels,
+        text: otu_labels,
         marker: {
-          color: data.otu_ids,
-          size: data.sample_values,
+          color: otu_ids,
+          size: sample_values,
           colorscale: "Viridis"
         }
       };
@@ -42,7 +47,7 @@ function buildCharts(sample) {
       var bubbleLayout = {
         title: "OTU ID",
         showlegend: false,
-        height: 750,
+        height: 600,
         width: 1500
       };
       Plotly.newPlot("bubble", bubblePlotInfo, bubbleLayout);
@@ -58,7 +63,8 @@ function buildCharts(sample) {
       marker: {
         colorscale: "Jet"
       }
-    }];
+    }
+  ];
     var pieLayout = {
       showlegend: true,
       height: 600,

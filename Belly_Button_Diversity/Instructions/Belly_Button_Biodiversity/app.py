@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 
-import sqlalchemy
+# import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
@@ -17,7 +17,7 @@ app = Flask(__name__)
 #################################################
 # Database Setup
 #################################################
-
+#SQL ALCHEMY SECTION
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
 db = SQLAlchemy(app)
 
@@ -29,7 +29,7 @@ Base.prepare(db.engine, reflect=True)
 # Save references to each table
 Samples_Metadata = Base.classes.sample_metadata
 Samples = Base.classes.samples
-
+####################
 
 @app.route("/")
 def index():
